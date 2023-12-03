@@ -1,94 +1,35 @@
-import requests
-import json
-import time
+<table class="tabla-ofertas-empleo">
+    <thead>
+        <tr>
+            <th>Título</th>
+            <th>Descripción</th>
+            <th>Empresa</th>
+            <th>Ubicación</th>
+            <th>Fecha de publicación</th>
+            <th>Salario</th>
+            <th>Requisitos</th>
+            <th>Responsabilidades</th>
+            <th>Competencias</th>
+            <th>Soft skills</th>
+            <th>Hard skills</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for oferta_empleo in ofertas_empleo %}
+        <tr>
+            <td>{{ oferta_empleo.titulo }}</td>
+            <td>{{ oferta_empleo.descripcion }}</td>
+            <td>{{ oferta_empleo.empresa }}</td>
+            <td>{{ oferta_empleo.ubicacion }}</td>
+            <td>{{ oferta_empleo.fecha_publicacion }}</td>
+            <td>{{ oferta_empleo.salario }}</td>
+            <td>{{ oferta_empleo.requisitos }}</td>
+            <td>{{ oferta_empleo.responsabilidades }}</td>
+            <td>{{ oferta_empleo.competencias }}</td>
+            <td>{{ oferta_empleo.soft_skills }}</td>
+            <td>{{ oferta_empleo.hard_skills }}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
 
-# Lista de portales de empleo
-portales_empleo = [
-    "https://www.infojobs.net",
-    "https://es.indeed.com",
-    "https://www.linkedin.com/jobs",
-    "https://www.google.com/search?q=trabajos",
-    "https://www.infoempleo.com",
-    "https://jobtoday.com/es",
-    "https://www.empleate.gob.es/empleo/#/",
-    "https://www.trabajos.com",
-    "https://www.tecnoempleo.com",
-    "https://www.domestika.org",
-    "https://ticjob.es",
-    "https://www.luxetalent.es",
-    "http://www.marketyou.com",
-    "https://www.turijobs.com",
-    "https://www.primerempleo.com",
-    "https://www.bewanted.com",
-    "https://www.studentjob.es",
-    "https://www.talentoteca.net",
-    "https://www.jobs.universia.net",
-    "https://www.cornerjob.com",
-    "https://www.jobfie.es",
-    "https://www.talent.es",
-    "https://www.trabajando.es",
-    "https://www.whatjobs.es",
-    "https://www.pagepersonnel.es",
-    "https://www.jobomas.es",
-    "https://www.trabajojusto.es",
-    "http://www.mapjobs.net"
-]
-
-# Campos a extraer
-campos = [
-    "titulo",
-    "descripcion",
-    "empresa",
-    "ubicacion",
-    "fecha_publicacion",
-    "salario",
-    "requisitos",
-    "responsabilidades",
-    "competencias",
-    "soft_skills",
-    "hard_skills"
-]
-
-# Función para extraer las ofertas de empleo de un portal
-def extraer_ofertas_empleo(portal):
-    # Obtener la URL de la página de listado de ofertas de empleo
-    url_pagina_listado = portal + "/trabajos"
-
-    # Realizar la petición HTTP a la página de listado
-    respuesta = requests.get(url_pagina_listado)
-
-    # Comprobar que la petición se realizó correctamente
-    if respuesta.status_code == 200:
-        # Obtener el contenido de la página
-        contenido = respuesta.content.decode("utf-8")
-
-        # Extraer las ofertas de empleo del contenido
-        ofertas_empleo = json.loads(contenido)["results"]
-
-        # Devolver las ofertas de empleo
-        return ofertas_empleo
-    else:
-        # Devolver un error
-        return None
-
-# Función para actualizar las ofertas de empleo
-def actualizar_ofertas_empleo():
-    # Lista de ofertas de empleo
-    ofertas_empleo = []
-
-    # Recorrer los portales de empleo
-    for portal in portales_empleo:
-        # Extraer las ofertas de empleo del portal
-        ofertas_empleo_portal = extraer_ofertas_empleo(portal)
-
-        # Añadir las ofertas de empleo del portal a la lista de ofertas de empleo
-        ofertas_empleo += ofertas_empleo_portal
-
-    # Guardar las ofertas de empleo en un archivo
-    with open("ofertas_empleo.json", "w") as archivo:
-        archivo.write(json.dumps(ofertas_empleo))
-
-# Bucle para actualizar las ofertas de empleo en tiempo real
-while True:
-    actualizar_ofertas_empleo()
-    time.sleep(60)
